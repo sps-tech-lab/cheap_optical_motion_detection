@@ -53,20 +53,24 @@ void setup() {
   digitalWrite(SCLK, HIGH);
   digitalWrite(MOSI, HIGH);
   digitalWrite(MISO, LOW);
+
+  Serial.print('+');
 }
 //////////////////////////////////////  ОСНОВНОЙ ЦИКЛ  //////////////////////////////////////
 void loop()
 {
-  digitalWrite(SCLK, LOW);  // костыль для анализатора [!!!]
+//  digitalWrite(SCLK, LOW);  // костыль для анализатора [!!!]
   
-  pixel_grab(frame, NUM_PIXS);
+  //pixel_grab(frame, NUM_PIXS);
+  int temp = ADNS_read(0x00);
   
-  digitalWrite(SCLK, LOW);  // костыль для анализатора [!!!]
+// digitalWrite(SCLK, LOW);  // костыль для анализатора [!!!]
   
   Serial.write(255);
-  Serial.write(frame, NUM_PIXS);
+  //Serial.write(frame, NUM_PIXS);
+  Serial.write(temp);
   
-  delay(50);
+  delay(20);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 //-------------------------------------------------------------------------------------------
@@ -127,12 +131,12 @@ inline void pixel_grab(uint8_t *buffer, uint16_t nBytes) {
   uint8_t temp_byte;
 
   ADNS_write(ADNS_PIX_GRAB, 0xFF);                  // Сбрасываем счетчик считанных пикселей
-  digitalWrite(SCLK, LOW);                          // костыль для анализатора [!!!]
+//  digitalWrite(SCLK, LOW);                          // костыль для анализатора [!!!]
 
   for (uint16_t count = 0; count < nBytes; count++) {
     while (1) {
       temp_byte = ADNS_read(ADNS_PIX_GRAB);
-      digitalWrite(SCLK, LOW);                      // костыль для анализатора [!!!]
+ //     digitalWrite(SCLK, LOW);                      // костыль для анализатора [!!!]
       if (temp_byte & ADNS_PIX_DATA_VALID) {
         break;
       }
