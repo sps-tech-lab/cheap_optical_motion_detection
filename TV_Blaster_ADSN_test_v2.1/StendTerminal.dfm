@@ -2,9 +2,9 @@ object Form1: TForm1
   Left = 916
   Top = 202
   BorderStyle = bsSingle
-  Caption = ':: SPS :: 15x15 ADSN.CAMERA test v 2.0'
-  ClientHeight = 302
-  ClientWidth = 404
+  Caption = ':: SPS :: 15x15 ADSN.CAMERA test v 2.1'
+  ClientHeight = 301
+  ClientWidth = 402
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -43882,9 +43882,9 @@ object Form1: TForm1
       Top = 15
       Width = 89
       Height = 45
-      Max = 4
+      Max = 2
       Min = 1
-      Position = 4
+      Position = 2
       TabOrder = 0
       OnChange = BrightChange
     end
@@ -43918,17 +43918,26 @@ object Form1: TForm1
     object RandomBtn: TButton
       Left = 8
       Top = 16
-      Width = 137
+      Width = 65
       Height = 25
       Caption = 'Random'
       TabOrder = 0
       OnClick = RandomBtnClick
     end
+    object Button1: TButton
+      Left = 80
+      Top = 16
+      Width = 65
+      Height = 25
+      Caption = 'Gradient'
+      TabOrder = 1
+      OnClick = Button1Click
+    end
   end
   object Display: TButton
     Left = 16
     Top = 304
-    Width = 137
+    Width = 73
     Height = 25
     Caption = 'Display'
     TabOrder = 8

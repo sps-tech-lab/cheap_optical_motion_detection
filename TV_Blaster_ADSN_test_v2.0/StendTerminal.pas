@@ -52,6 +52,8 @@ type
     Bright: TTrackBar;
     ScaleBar: TTrackBar;
     Display: TButton;
+    RandomBtn: TButton;
+    Label4: TLabel;
     procedure ConnectClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -62,7 +64,6 @@ type
     procedure Button6Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure FormHide(Sender: TObject);
     procedure DisplayClick(Sender: TObject);
@@ -70,6 +71,7 @@ type
     procedure Timer3Timer(Sender: TObject);
     procedure ScaleBarChange(Sender: TObject);
     procedure BrightChange(Sender: TObject);
+    procedure RandomBtnClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -99,7 +101,7 @@ var
 
   str : string;
   priem : bool;
-  data:array[1..64] of Integer;
+  data:array[1..250] of Integer;
   clib:array[1..4] of Integer;
   n : Integer;
   x : Integer;
@@ -407,6 +409,7 @@ end;
 procedure TForm1.Timer1Timer(Sender: TObject);
 var
   i : Integer;
+  inbox : byte;
 begin
 //  ReadFile(hComm,inChar,High(inChar),ReadenBytes,Nil); //!!!
   ReadFile(hComm,inChar,1,ReadenBytes,Nil); //!!!
@@ -419,11 +422,16 @@ begin
     for i:=0 to ReadenBytes do
       if inChar[i] <> '' then
 
-      str:=inChar;
+      Label4.Caption := inttostr(Ord(inChar[i])) ;
+   //   str:=inChar;
+
+      inbox:=Ord(inChar[i]);
+
 
 ////////////////////////////////////////////////// Приход пакета
       // if str = '#' then
-      if strtoint(str) = 255 then
+      if strtoint(Label4.Caption) = 255 then
+    // if inbox = 255 then
       begin
         priem:=True;
         n:=0;
@@ -431,11 +439,11 @@ begin
 ////////////////////////////////////////////////// Забиваем данные
       if priem=True  then
       begin
-        data[n]:= strtoint(str);
+        data[n]:= strtoint(Label4.Caption);
         inc(n);
       end;
 ////////////////////////////////////////////////// Конец пакета
-      if n > 4 then
+      if n > 225 then
       begin
         priem:=False;
         n:=1;
@@ -450,13 +458,7 @@ begin
   inChar:='';
 
 end;
-procedure TForm1.Button2Click(Sender: TObject);
-begin
-clib[1]:=data[1];
-clib[2]:=data[2];
-clib[3]:=data[3];
-clib[4]:=data[4];
-end;
+
 ///////////////////////////////////////////////////////  ТАЙМЕР 3 /////////////
 //////////////////////////////////////////////  ПРОВЕРЯЕТ СВЯЗЬ С КОНТРОЛЛЕРОМ
 procedure TForm1.Button8Click(Sender: TObject);
@@ -486,12 +488,11 @@ for xg:=1 to 15 do
 begin
   for yg:=1 to 15 do
   begin
-  color:=Random(64);  // Имитация камры
     for px:=1 to scale do
     begin
       for py:=1 to scale do
       begin
-        PaintBox1.Canvas.Pixels[px+xg*scale,py+yg*scale]:=RGB(color*brg,color*brg,color*brg);
+        PaintBox1.Canvas.Pixels[px+xg*scale,py+yg*scale]:=RGB(data[xg*yg]*brg,data[xg*yg]*brg,data[xg*yg]*brg);
       end;
     end;
   end;
@@ -524,6 +525,20 @@ procedure TForm1.BrightChange(Sender: TObject);
 begin
   PaintBox1.Refresh;
   if Connect.Enabled=true then Display.Click;
+end;
+
+procedure TForm1.RandomBtnClick(Sender: TObject);
+var
+  xg,yg : Integer;
+begin
+for xg:=1 to 15 do
+begin
+  for yg:=1 to 15 do
+  begin
+    data[xg*yg] :=Random(64);  // Имитация камры
+  end;
+end;
+Display.Click;
 end;
 
 initialization

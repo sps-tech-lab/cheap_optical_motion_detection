@@ -4,7 +4,7 @@ object Form1: TForm1
   BorderStyle = bsSingle
   Caption = ':: SPS :: 15x15 ADSN.CAMERA test v 2.0'
   ClientHeight = 303
-  ClientWidth = 408
+  ClientWidth = 403
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -4287,6 +4287,14 @@ object Form1: TForm1
   OnHide = FormHide
   PixelsPerInch = 96
   TextHeight = 13
+  object Label4: TLabel
+    Left = 240
+    Top = 320
+    Width = 32
+    Height = 13
+    Caption = 'Label4'
+    Visible = False
+  end
   object GroupBox1: TGroupBox
     Left = 152
     Top = 376
@@ -43907,16 +43915,26 @@ object Form1: TForm1
     Height = 49
     Caption = #1048#1084#1080#1090#1072#1094#1080#1103
     TabOrder = 7
-    object Display: TButton
+    object RandomBtn: TButton
       Left = 8
       Top = 16
       Width = 137
       Height = 25
-      Caption = 'Display'
+      Caption = 'Random'
       TabOrder = 0
-      WordWrap = True
-      OnClick = DisplayClick
+      OnClick = RandomBtnClick
     end
+  end
+  object Display: TButton
+    Left = 16
+    Top = 304
+    Width = 137
+    Height = 25
+    Caption = 'Display'
+    TabOrder = 8
+    Visible = False
+    WordWrap = True
+    OnClick = DisplayClick
   end
   object XPManifest1: TXPManifest
     Left = 1032

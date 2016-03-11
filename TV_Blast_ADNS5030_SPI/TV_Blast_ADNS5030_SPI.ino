@@ -39,6 +39,7 @@
 #define ADNS_MASK_PIX           0x7f      // Маска для работы с 7м битом
 
 byte    frame[NUM_PIXS];                  // Буффер кадра
+byte    ter[225];
 
 //////////////////////////////////////  ИНИЦИАЛИЗАЦИЯ  ///////////////////////////////////////
 void setup() {
@@ -60,15 +61,24 @@ void setup() {
 //////////////////////////////////////  ОСНОВНОЙ ЦИКЛ  //////////////////////////////////////
 void loop()
 {
-  pixel_grab(frame, NUM_PIXS);
-  //int temp = ADNS_read(0x02);
+ 
+ //int temp = ADNS_read(0x02);
   //ADNS_write(0x02,0xFF);
-  
+  // Serial.write(temp);
+/*
+  Serial.write(255);  // Отправляем тестовый градиент
+  int j;
+  for (int i = 0;i <225; i++)
+  {
+    ter[i] = i;
+  }
+  Serial.write(ter, 225);
+*/
+  pixel_grab(frame, NUM_PIXS);
   Serial.write(255);
   Serial.write(frame, NUM_PIXS);
- // Serial.write(temp);
-  
-  delay(2);
+ 
+  delay(300);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 //-------------------------------------------------------------------------------------------
@@ -131,12 +141,12 @@ inline void pixel_grab(uint8_t *buffer, uint16_t nBytes) {
   ADNS_write(ADNS_PIX_GRAB, 0xFF);                  // Сбрасываем счетчик считанных пикселей
 
   for (uint16_t count = 0; count < nBytes; count++) {
-//    while (1) {
+    while (1) {
       temp_byte = ADNS_read(ADNS_PIX_GRAB);
-//     if (temp_byte & ADNS_PIX_DATA_VALID) {       // Проверка на валидность пикселей
-//       break;
-//     }
-//   }
+     if (temp_byte & ADNS_PIX_DATA_VALID) {       // Проверка на валидность пикселей
+       break;
+     }
+   }
     *(buffer + count) = temp_byte & ADNS_MASK_PIX;  // Ограничение количества бит данных
   }
 }
