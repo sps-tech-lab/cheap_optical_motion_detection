@@ -61,12 +61,13 @@ void setup() {
 //////////////////////////////////////  ОСНОВНОЙ ЦИКЛ  //////////////////////////////////////
 void loop()
 {
- 
- //int temp = ADNS_read(0x02);
-  //ADNS_write(0x02,0xFF);
-  // Serial.write(temp);
 /*
-  Serial.write(255);  // Отправляем тестовый градиент
+  int temp = ADNS_read(0x02);            // Считываем регистр сесора
+  ADNS_write(0x02,0xFF);
+  Serial.write(temp);
+*/
+/*
+  Serial.write(255);                     // Отправляем тестовый градиент
   int j;
   for (int i = 0;i <225; i++)
   {
@@ -74,11 +75,16 @@ void loop()
   }
   Serial.write(ter, 225);
 */
-  pixel_grab(frame, NUM_PIXS);
+  pixel_grab(frame, NUM_PIXS);          // Считываем массив кадра
   Serial.write(255);
-  Serial.write(frame, NUM_PIXS);
- 
-  delay(300);
+
+  for (int i = 0;i <225; i++)           // Шлем данные "постепенно"
+  {
+      Serial.write(frame[i]);
+      delay(1);
+  }
+//  Serial.write(frame, NUM_PIXS);      // Шлем данные "одним пакетом"
+//  delay(200);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 //-------------------------------------------------------------------------------------------
@@ -140,13 +146,13 @@ inline void pixel_grab(uint8_t *buffer, uint16_t nBytes) {
 
   ADNS_write(ADNS_PIX_GRAB, 0xFF);                  // Сбрасываем счетчик считанных пикселей
 
-  for (uint16_t count = 0; count < nBytes; count++) {
-    while (1) {
+  for (uint16_t count = 0; count < nBytes; count++) 
+  {
+    while (1)                                       // Проверка на валидность пикселей
+    {
       temp_byte = ADNS_read(ADNS_PIX_GRAB);
-     if (temp_byte & ADNS_PIX_DATA_VALID) {       // Проверка на валидность пикселей
-       break;
-     }
-   }
+      if (temp_byte & ADNS_PIX_DATA_VALID) {break;}
+    }
     *(buffer + count) = temp_byte & ADNS_MASK_PIX;  // Ограничение количества бит данных
   }
 }
