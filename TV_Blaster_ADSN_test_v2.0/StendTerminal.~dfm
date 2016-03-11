@@ -1,10 +1,10 @@
 object Form1: TForm1
-  Left = 309
-  Top = 121
+  Left = 916
+  Top = 202
   BorderStyle = bsSingle
-  Caption = ':: SPS :: 2x2 RES.CAMERA text v 1.7'
-  ClientHeight = 542
-  ClientWidth = 662
+  Caption = ':: SPS :: 15x15 ADSN.CAMERA test v 2.0'
+  ClientHeight = 303
+  ClientWidth = 408
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clBlack
@@ -4287,59 +4287,14 @@ object Form1: TForm1
   OnHide = FormHide
   PixelsPerInch = 96
   TextHeight = 13
-  object Shape1: TShape
-    Left = 288
-    Top = 224
-    Width = 25
-    Height = 25
-  end
-  object Shape2: TShape
-    Left = 240
-    Top = 224
-    Width = 42
-    Height = 25
-  end
-  object Label4: TLabel
-    Left = 241
-    Top = 226
-    Width = 40
-    Height = 21
-    Alignment = taCenter
-    AutoSize = False
-    Caption = '255'
-    Color = clWhite
-    Font.Charset = RUSSIAN_CHARSET
-    Font.Color = clBlack
-    Font.Height = -16
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
-  object Label2: TLabel
-    Left = 289
-    Top = 226
-    Width = 23
-    Height = 21
-    Alignment = taCenter
-    AutoSize = False
-    Caption = 'A'
-    Color = clWhite
-    Font.Charset = RUSSIAN_CHARSET
-    Font.Color = clBlack
-    Font.Height = -16
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-  end
   object GroupBox1: TGroupBox
-    Left = 464
-    Top = 8
+    Left = 152
+    Top = 376
     Width = 193
     Height = 241
     Caption = #1050#1054#1053#1057#1054#1051#1068
     TabOrder = 2
+    Visible = False
     object Button6: TButton
       Left = 8
       Top = 208
@@ -4385,12 +4340,13 @@ object Form1: TForm1
     end
   end
   object GroupBox3: TGroupBox
-    Left = 320
-    Top = 8
+    Left = 8
+    Top = 376
     Width = 137
     Height = 241
     Caption = #1057#1054#1057#1058#1054#1071#1053#1048#1045
     TabOrder = 0
+    Visible = False
     object Label1: TLabel
       Left = 40
       Top = 16
@@ -43790,14 +43746,14 @@ object Form1: TForm1
         E00F0000C0070000C00300008001000080010000800100008001000080010000
         80010000C0030000C0070000E00F0000F81F0000FFFF0000}
     end
-    object Button1: TButton
+    object Connect: TButton
       Left = 48
       Top = 24
       Width = 89
       Height = 33
       Caption = 'Connect'
       TabOrder = 0
-      OnClick = Button1Click
+      OnClick = ConnectClick
     end
     object Button3: TButton
       Left = 48
@@ -43818,181 +43774,16 @@ object Form1: TForm1
       OnClick = Button4Click
     end
   end
-  object GroupBox8: TGroupBox
-    Left = 168
-    Top = 8
-    Width = 145
-    Height = 153
-    Caption = 'Camera 2x2'
-    Color = clBtnFace
-    ParentColor = False
-    TabOrder = 3
-    object Shape5: TShape
-      Left = 8
-      Top = 16
-      Width = 129
-      Height = 129
-      Brush.Color = clBlack
-    end
-    object Pixel_1: TShape
-      Left = 24
-      Top = 32
-      Width = 49
-      Height = 49
-      Brush.Color = clSilver
-    end
-    object Pixel_2: TShape
-      Left = 72
-      Top = 32
-      Width = 49
-      Height = 49
-      Brush.Color = clInactiveCaptionText
-    end
-    object Pixel_4: TShape
-      Left = 72
-      Top = 80
-      Width = 49
-      Height = 49
-      Brush.Color = clMedGray
-    end
-    object Pixel_3: TShape
-      Left = 24
-      Top = 80
-      Width = 49
-      Height = 49
-      Brush.Color = clMenu
-    end
-    object Label_px1: TLabel
-      Left = 39
-      Top = 18
-      Width = 18
-      Height = 13
-      Caption = '255'
-      Color = clBlack
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clSilver
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
-    end
-    object Label_px2: TLabel
-      Left = 87
-      Top = 18
-      Width = 18
-      Height = 13
-      Caption = '255'
-      Color = clBlack
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clSilver
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
-    end
-    object Label_px3: TLabel
-      Left = 39
-      Top = 130
-      Width = 18
-      Height = 13
-      Caption = '255'
-      Color = clBlack
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clSilver
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
-    end
-    object Label_px4: TLabel
-      Left = 87
-      Top = 130
-      Width = 18
-      Height = 13
-      Caption = '255'
-      Color = clBlack
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clSilver
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
-    end
-    object Label9: TLabel
-      Left = 11
-      Top = 18
-      Width = 11
-      Height = 10
-      Caption = 'P1'
-      Color = clBlack
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clGray
-      Font.Height = -8
-      Font.Name = 'Small Fonts'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-    end
-    object Label10: TLabel
-      Left = 123
-      Top = 18
-      Width = 13
-      Height = 10
-      Caption = 'P2'
-      Color = clBlack
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clGray
-      Font.Height = -8
-      Font.Name = 'Small Fonts'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-    end
-    object Label11: TLabel
-      Left = 11
-      Top = 130
-      Width = 13
-      Height = 10
-      Caption = 'P3'
-      Color = clBlack
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clGray
-      Font.Height = -8
-      Font.Name = 'Small Fonts'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-    end
-    object Label12: TLabel
-      Left = 123
-      Top = 130
-      Width = 13
-      Height = 10
-      Caption = 'P4'
-      Color = clBlack
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clGray
-      Font.Height = -8
-      Font.Name = 'Small Fonts'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-    end
-  end
   object GroupBox9: TGroupBox
     Left = 8
     Top = 168
-    Width = 305
-    Height = 49
+    Width = 153
+    Height = 73
     Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080
-    TabOrder = 4
+    TabOrder = 3
     object ComboBox2: TComboBox
-      Left = 160
-      Top = 16
+      Left = 8
+      Top = 40
       Width = 137
       Height = 21
       ItemHeight = 13
@@ -44048,137 +43839,84 @@ object Form1: TForm1
         'COM20')
     end
   end
-  object Display: TButton
-    Left = 712
-    Top = 32
-    Width = 75
-    Height = 17
-    Caption = 'Display'
-    TabOrder = 5
-    Visible = False
-    OnClick = DisplayClick
-  end
-  object Button8: TButton
-    Left = 168
-    Top = 224
-    Width = 41
-    Height = 25
-    Caption = 'Clear'
-    TabOrder = 6
-    OnClick = Button8Click
-  end
-  object CheckBox8: TCheckBox
-    Left = 218
-    Top = 228
-    Width = 17
-    Height = 17
-    Checked = True
-    State = cbChecked
-    TabOrder = 7
-  end
   object GroupBox2: TGroupBox
-    Left = 8
-    Top = 256
-    Width = 649
-    Height = 281
-    Caption = #1043#1088#1072#1092#1080#1082#1080
-    TabOrder = 8
+    Left = 168
+    Top = 8
+    Width = 230
+    Height = 233
+    Caption = #1050#1040#1052#1045#1056#1040' 15'#1093'15'
+    TabOrder = 4
     object Shape3: TShape
-      Left = 8
-      Top = 16
-      Width = 633
-      Height = 257
+      Left = 22
+      Top = 27
+      Width = 187
+      Height = 187
       Brush.Color = clBlack
     end
     object PaintBox1: TPaintBox
-      Left = 8
-      Top = 16
-      Width = 633
-      Height = 256
+      Left = 22
+      Top = 27
+      Width = 187
+      Height = 187
       Color = clBtnFace
       ParentColor = False
     end
-    object Label8: TLabel
-      Left = 81
-      Top = 18
-      Width = 23
-      Height = 21
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'P4'
-      Color = clBlack
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clOlive
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-      Transparent = True
-    end
-    object Label7: TLabel
-      Left = 57
-      Top = 18
-      Width = 23
-      Height = 21
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'P3'
-      Color = clBlack
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clNavy
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-      Transparent = True
-    end
-    object Label6: TLabel
-      Left = 33
-      Top = 18
-      Width = 23
-      Height = 21
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'P2'
-      Color = clBlack
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clMaroon
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-      Transparent = True
-    end
-    object Label5: TLabel
-      Left = 9
-      Top = 18
-      Width = 23
-      Height = 21
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'P1'
-      Color = clBlack
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clGreen
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-      Transparent = True
+  end
+  object GroupBox4: TGroupBox
+    Left = 168
+    Top = 248
+    Width = 97
+    Height = 49
+    Caption = #1071#1088#1082#1086#1089#1090#1100
+    TabOrder = 5
+    object Bright: TTrackBar
+      Left = 4
+      Top = 15
+      Width = 89
+      Height = 45
+      Max = 4
+      Min = 1
+      Position = 4
+      TabOrder = 0
+      OnChange = BrightChange
     end
   end
-  object Button2: TButton
+  object GroupBox6: TGroupBox
+    Left = 265
+    Top = 248
+    Width = 134
+    Height = 49
+    Caption = #1052#1072#1089#1096#1090#1072#1073
+    TabOrder = 6
+    object ScaleBar: TTrackBar
+      Left = 5
+      Top = 15
+      Width = 121
+      Height = 41
+      Max = 11
+      Min = 1
+      Position = 11
+      TabOrder = 0
+      OnChange = ScaleBarChange
+    end
+  end
+  object GroupBox7: TGroupBox
     Left = 8
-    Top = 224
-    Width = 145
-    Height = 25
-    Caption = #1050#1072#1083#1080#1073#1088#1086#1074#1072#1090#1100' [ ! ]'
-    TabOrder = 9
-    OnClick = Button2Click
+    Top = 248
+    Width = 153
+    Height = 49
+    Caption = #1048#1084#1080#1090#1072#1094#1080#1103
+    TabOrder = 7
+    object Display: TButton
+      Left = 8
+      Top = 16
+      Width = 137
+      Height = 25
+      Caption = 'Display'
+      TabOrder = 0
+      WordWrap = True
+      OnClick = DisplayClick
+    end
   end
   object XPManifest1: TXPManifest
     Left = 1032
@@ -44199,10 +43937,5 @@ object Form1: TForm1
     OnTimer = Timer1Timer
     Left = 824
     Top = 24
-  end
-  object Timer3: TTimer
-    OnTimer = Timer3Timer
-    Left = 664
-    Top = 504
   end
 end

@@ -1,9 +1,9 @@
 object Form1: TForm1
   Left = 916
-  Top = 201
+  Top = 202
   BorderStyle = bsSingle
   Caption = ':: SPS :: 15x15 ADSN.CAMERA test v 2.0'
-  ClientHeight = 325
+  ClientHeight = 303
   ClientWidth = 408
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -43746,14 +43746,14 @@ object Form1: TForm1
         E00F0000C0070000C00300008001000080010000800100008001000080010000
         80010000C0030000C0070000E00F0000F81F0000FFFF0000}
     end
-    object Button1: TButton
+    object Connect: TButton
       Left = 48
       Top = 24
       Width = 89
       Height = 33
       Caption = 'Connect'
       TabOrder = 0
-      OnClick = Button1Click
+      OnClick = ConnectClick
     end
     object Button3: TButton
       Left = 48
@@ -43839,37 +43839,83 @@ object Form1: TForm1
         'COM20')
     end
   end
-  object Display: TButton
-    Left = 120
-    Top = 264
-    Width = 75
-    Height = 17
-    Caption = 'Display'
-    TabOrder = 4
-    Visible = False
-    OnClick = DisplayClick
-  end
   object GroupBox2: TGroupBox
     Left = 168
     Top = 8
     Width = 230
     Height = 233
     Caption = #1050#1040#1052#1045#1056#1040' 15'#1093'15'
-    TabOrder = 5
+    TabOrder = 4
     object Shape3: TShape
-      Left = 16
-      Top = 24
-      Width = 195
-      Height = 195
+      Left = 22
+      Top = 27
+      Width = 187
+      Height = 187
       Brush.Color = clBlack
     end
     object PaintBox1: TPaintBox
-      Left = 16
-      Top = 24
-      Width = 195
-      Height = 195
+      Left = 22
+      Top = 27
+      Width = 187
+      Height = 187
       Color = clBtnFace
       ParentColor = False
+    end
+  end
+  object GroupBox4: TGroupBox
+    Left = 168
+    Top = 248
+    Width = 97
+    Height = 49
+    Caption = #1071#1088#1082#1086#1089#1090#1100
+    TabOrder = 5
+    object Bright: TTrackBar
+      Left = 4
+      Top = 15
+      Width = 89
+      Height = 45
+      Max = 4
+      Min = 1
+      Position = 4
+      TabOrder = 0
+      OnChange = BrightChange
+    end
+  end
+  object GroupBox6: TGroupBox
+    Left = 265
+    Top = 248
+    Width = 134
+    Height = 49
+    Caption = #1052#1072#1089#1096#1090#1072#1073
+    TabOrder = 6
+    object ScaleBar: TTrackBar
+      Left = 5
+      Top = 15
+      Width = 121
+      Height = 41
+      Max = 11
+      Min = 1
+      Position = 11
+      TabOrder = 0
+      OnChange = ScaleBarChange
+    end
+  end
+  object GroupBox7: TGroupBox
+    Left = 8
+    Top = 248
+    Width = 153
+    Height = 49
+    Caption = #1048#1084#1080#1090#1072#1094#1080#1103
+    TabOrder = 7
+    object Display: TButton
+      Left = 8
+      Top = 16
+      Width = 137
+      Height = 25
+      Caption = 'Display'
+      TabOrder = 0
+      WordWrap = True
+      OnClick = DisplayClick
     end
   end
   object XPManifest1: TXPManifest

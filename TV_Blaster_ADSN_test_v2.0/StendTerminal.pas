@@ -26,7 +26,7 @@ type
     Label1: TLabel;
     XPManifest1: TXPManifest;
     GroupBox5: TGroupBox;
-    Button1: TButton;
+    Connect: TButton;
     Button3: TButton;
     Button4: TButton;
     Image1: TImage;
@@ -36,7 +36,6 @@ type
     ComboBox2: TComboBox;
     ComboBox1: TComboBox;
     XPManifest2: TXPManifest;
-    Display: TButton;
     ComboBox3: TComboBox;
     ComboBox5: TComboBox;
     Button9: TButton;
@@ -47,7 +46,13 @@ type
     GroupBox2: TGroupBox;
     Shape3: TShape;
     PaintBox1: TPaintBox;
-    procedure Button1Click(Sender: TObject);
+    GroupBox4: TGroupBox;
+    GroupBox6: TGroupBox;
+    GroupBox7: TGroupBox;
+    Bright: TTrackBar;
+    ScaleBar: TTrackBar;
+    Display: TButton;
+    procedure ConnectClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure ComboBox1Click(Sender: TObject);
@@ -63,6 +68,8 @@ type
     procedure DisplayClick(Sender: TObject);
     procedure TrackBar1Change(Sender: TObject);
     procedure Timer3Timer(Sender: TObject);
+    procedure ScaleBarChange(Sender: TObject);
+    procedure BrightChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -104,7 +111,7 @@ implementation
 
 {$R *.dfm}
 ///////////////////////////////////////////////////////  КНОПУКА Connect //////
-procedure TForm1.Button1Click(Sender: TObject);
+procedure TForm1.ConnectClick(Sender: TObject);
 begin
 
   Memo2.Clear;
@@ -219,7 +226,7 @@ begin
   //Ошибок нет. Запускаем поток
   Begin
     ResumeThread(ThreadID);
-    Button1.Enabled:=false;
+    Connect.Enabled:=false;
     Button3.Enabled:=true;
     ComboBox1.Enabled:=false;
     ComboBox2.Enabled:=false;
@@ -290,7 +297,7 @@ begin
   CloseHandle(hReadCom);
   hReadCom:=0;
   //Panel1.Enabled:=true;
-  Button1.Enabled:=true;
+  Connect.Enabled:=true;
   Button3.Enabled:=false;
   ComboBox1.Enabled:=true;
   ComboBox2.Enabled:=true;
@@ -412,27 +419,11 @@ begin
     for i:=0 to ReadenBytes do
       if inChar[i] <> '' then
 
-      Label4.Caption := inttostr(Ord(inChar[i])) ;
       str:=inChar;
-      Label2.Caption:=inChar; // Выводим принятый символ
-
-      if CheckBox8.Checked then
-        begin
-          Label2.Visible:=True;
-          Label4.Visible:=True;
-        end
-      else
-        begin
-          Label2.Visible:=False;
-          Label4.Visible:=False;
-        end;
-
-
-
 
 ////////////////////////////////////////////////// Приход пакета
       // if str = '#' then
-      if strtoint(Label4.Caption) = 255 then
+      if strtoint(str) = 255 then
       begin
         priem:=True;
         n:=0;
@@ -440,7 +431,7 @@ begin
 ////////////////////////////////////////////////// Забиваем данные
       if priem=True  then
       begin
-        data[n]:= strtoint(Label4.Caption);
+        data[n]:= strtoint(str);
         inc(n);
       end;
 ////////////////////////////////////////////////// Конец пакета
@@ -485,17 +476,26 @@ Form1.Caption:='rrrr';
 end;
 
 procedure TForm1.DisplayClick(Sender: TObject);
+var
+px,py,xg,yg,color,scale,brg : Integer;
 begin
-  PaintBox1.Canvas.Pixels[p,257-data[1]]:=RGB(10,255,100);
-  PaintBox1.Canvas.Pixels[p,257-data[2]]:=RGB(255,10,100);
-  PaintBox1.Canvas.Pixels[p,257-data[3]]:=RGB(10,100,255);
-  PaintBox1.Canvas.Pixels[p,257-data[4]]:=RGB(255,255,10);
-  inc(p);
-  if p>=PaintBox1.Width-1 then
+scale:=ScaleBar.Position;
+brg:=Bright.Position;
+
+for xg:=1 to 15 do
+begin
+  for yg:=1 to 15 do
+  begin
+  color:=Random(64);  // Имитация камры
+    for px:=1 to scale do
     begin
-    p:=0;
-    PaintBox1.Refresh;
+      for py:=1 to scale do
+      begin
+        PaintBox1.Canvas.Pixels[px+xg*scale,py+yg*scale]:=RGB(color*brg,color*brg,color*brg);
+      end;
+    end;
   end;
+end;
 
 end;
 
@@ -512,6 +512,18 @@ begin
   begin
     PaintBox1.Canvas.Pixels[p,u]:=RGB(255,255,255);
   end
+end;
+
+procedure TForm1.ScaleBarChange(Sender: TObject);
+begin
+  PaintBox1.Refresh;
+  if Connect.Enabled=true then Display.Click;
+end;
+
+procedure TForm1.BrightChange(Sender: TObject);
+begin
+  PaintBox1.Refresh;
+  if Connect.Enabled=true then Display.Click;
 end;
 
 initialization

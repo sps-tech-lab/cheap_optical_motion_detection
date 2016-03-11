@@ -5,7 +5,7 @@ object AboutForm: TAboutForm
   BorderStyle = bsToolWindow
   Caption = 'About...'
   ClientHeight = 113
-  ClientWidth = 313
+  ClientWidth = 376
   Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object AboutForm: TAboutForm
   object Image1: TImage
     Left = 0
     Top = 0
-    Width = 153
+    Width = 225
     Height = 113
     Picture.Data = {
       0A544A504547496D6167656A0E0200FFD8FFE000104A46494600010201004800
@@ -4237,22 +4237,42 @@ object AboutForm: TAboutForm
     Stretch = True
   end
   object StaticText1: TStaticText
-    Left = 160
+    Left = 216
     Top = 16
     Width = 153
-    Height = 41
+    Height = 25
     Alignment = taCenter
     AutoSize = False
-    Caption = #1044#1072#1085#1085#1086#1077' '#1087#1088#1086#1075#1088#1072#1084#1084#1085#1086#1077' '#1086#1073#1077#1089#1087#1077#1095#1077#1085#1080#1077' '#1085#1072#1087#1080#1089#1072#1085#1086' '#1074'   SPS Technology'
+    Caption = #1044#1072#1085#1085#1086#1077' '#1087#1088#1086#1075#1088#1072#1084#1084#1085#1086#1077' '#1086#1073#1077#1089#1087#1077#1095#1077#1085#1080#1077' '#1085#1072#1087#1080#1089#1072#1083
     TabOrder = 0
   end
   object Button1: TButton
-    Left = 168
+    Left = 224
     Top = 80
     Width = 137
     Height = 25
     Caption = #1047#1072#1082#1088#1099#1090#1100
     TabOrder = 1
     OnClick = Button1Click
+  end
+  object StaticText2: TStaticText
+    Left = 223
+    Top = 61
+    Width = 153
+    Height = 17
+    Alignment = taCenter
+    AutoSize = False
+    Caption = 'SPS TECHNOLOGY'
+    TabOrder = 2
+  end
+  object StaticText3: TStaticText
+    Left = 223
+    Top = 44
+    Width = 153
+    Height = 17
+    Alignment = taCenter
+    AutoSize = False
+    Caption = #1057#1091#1089#1083#1086#1074' '#1055'.'#1057'.'
+    TabOrder = 3
   end
 end

@@ -11,6 +11,8 @@ type
     Image1: TImage;
     StaticText1: TStaticText;
     Button1: TButton;
+    StaticText2: TStaticText;
+    StaticText3: TStaticText;
     procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
