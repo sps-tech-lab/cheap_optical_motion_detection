@@ -55,64 +55,62 @@ void setup() {
   digitalWrite(MISO, LOW);
 
   Serial.print('+');
+  ADNS_reset();
 }
 //////////////////////////////////////  ОСНОВНОЙ ЦИКЛ  //////////////////////////////////////
 void loop()
 {
-//  digitalWrite(SCLK, LOW);  // костыль для анализатора [!!!]
-  
-  //pixel_grab(frame, NUM_PIXS);
-  int temp = ADNS_read(0x00);
-  
-// digitalWrite(SCLK, LOW);  // костыль для анализатора [!!!]
+  pixel_grab(frame, NUM_PIXS);
+  //int temp = ADNS_read(0x02);
+  //ADNS_write(0x02,0xFF);
   
   Serial.write(255);
-  //Serial.write(frame, NUM_PIXS);
-  Serial.write(temp);
+  Serial.write(frame, NUM_PIXS);
+ // Serial.write(temp);
   
-  delay(20);
+  delay(2);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 //-------------------------------------------------------------------------------------------
-void ADNS_write(byte address, byte data){     // Шлем адрес и данные через SPI:
-  digitalWrite(NCS, LOW);                     // Начинаем передачу
-  address |= 0x80;                            // Выставляем MSB-адреса [1] Признак записи
+void ADNS_write(byte address, byte data){           // Шлем адрес и данные через SPI:
+  digitalWrite(NCS, LOW);                           // Начинаем передачу
+  address |= 0x80;                                  // Выставляем MSB-адреса [1] Признак записи
   
-  for (byte i = 0x80; i; i >>= 1){            // Шлем адрес
+  for (byte i = 0x80; i; i >>= 1){                  // Шлем адрес
     digitalWrite(SCLK, LOW);
     address & i ? digitalWrite(MOSI, HIGH) : digitalWrite(MOSI, LOW);
     asm volatile ("nop");
     digitalWrite(SCLK, HIGH);
   }
 
-  delayMicroseconds(1);                       // Пауза между данными и адресом
+  delayMicroseconds(1);                             // Пауза между данными и адресом
 
-  for (byte i = 0x80; i; i >>= 1){            // Шлем данные
+  for (byte i = 0x80; i; i >>= 1){                  // Шлем данные
     digitalWrite(SCLK, LOW);
     data & i ? digitalWrite(MOSI, HIGH) : digitalWrite(MOSI, LOW);
     asm volatile ("nop");
     digitalWrite(SCLK, HIGH);
   }
  
-  delayMicroseconds(ADNS_DELAY_TSWW);         //tSWW. Задержка SPI между командами записи 
-  digitalWrite(NCS, HIGH);                    // Прекращаем передачу
+  delayMicroseconds(ADNS_DELAY_TSWW);               //tSWW. Задержка SPI между командами записи 
+  digitalWrite(NCS, HIGH);                          // Прекращаем передачу
 }
 //-------------------------------------------------------------------------------------------
 byte ADNS_read(byte address){
-  digitalWrite(NCS, LOW);                     // Начинаем передачу
-  address &= ~0x80;                           //Выставляем MSB-адреса [0] Признак чтения
+  digitalWrite(NCS, LOW);                           // Начинаем передачу
+  address &= ~0x80;                                 //Выставляем MSB-адреса [0] Признак чтения
   
-  for (byte i = 0x80; i; i >>= 1){            // Шлем адрес
+  for (byte i = 0x80; i; i >>= 1){                  // Шлем адрес
     digitalWrite(SCLK, LOW);
     address & i ? digitalWrite(MOSI, HIGH) : digitalWrite(MOSI, LOW);
     asm volatile ("nop");
     digitalWrite(SCLK, HIGH);
   }
 
-  delayMicroseconds(ADNS_DELAY_TSRAD);        // tSRAD. Задержка чтения адреса-даты
+  delayMicroseconds(ADNS_DELAY_TSRAD);              // tSRAD. Задержка чтения адреса-даты
 
-  byte data = 0;                              // Чистим переменную
-  for (byte i = 8; i; i--){                   // Считываем данные
+  byte data = 0;                                    // Чистим переменную
+  for (byte i = 8; i; i--){                         // Считываем данные
     // tick, tock, read
     digitalWrite(SCLK, LOW);
     asm volatile ("nop");
@@ -121,7 +119,7 @@ byte ADNS_read(byte address){
     if (digitalRead(MISO)) data |= 0x01;
   }
 
-  digitalWrite(NCS, HIGH);                    // Прекращаем передачу
+  digitalWrite(NCS, HIGH);                          // Прекращаем передачу
 
   delayMicroseconds(ADNS_DELAY_TSRWSRR);
   return data;
@@ -131,17 +129,14 @@ inline void pixel_grab(uint8_t *buffer, uint16_t nBytes) {
   uint8_t temp_byte;
 
   ADNS_write(ADNS_PIX_GRAB, 0xFF);                  // Сбрасываем счетчик считанных пикселей
-//  digitalWrite(SCLK, LOW);                          // костыль для анализатора [!!!]
 
   for (uint16_t count = 0; count < nBytes; count++) {
-    while (1) {
+//    while (1) {
       temp_byte = ADNS_read(ADNS_PIX_GRAB);
- //     digitalWrite(SCLK, LOW);                      // костыль для анализатора [!!!]
-      if (temp_byte & ADNS_PIX_DATA_VALID) {
-        break;
-      }
-      if (temp_byte == 255){ temp_byte = 254; }     // Ограничиваем диапазон значений
-    }
+//     if (temp_byte & ADNS_PIX_DATA_VALID) {       // Проверка на валидность пикселей
+//       break;
+//     }
+//   }
     *(buffer + count) = temp_byte & ADNS_MASK_PIX;  // Ограничение количества бит данных
   }
 }
@@ -155,7 +150,15 @@ inline void params_grab(uint8_t *buffer) {
   *(buffer + 5) = ADNS_read(ADNS_SHUTTER_LOWER);
 }
 //-------------------------------------------------------------------------------------------
-inline void pixel_and_params_grab(uint8_t *buffer) {
+inline void pixel_and_params_grab(uint8_t *buffer)  // Считываем кадр и параметры
+{  
   params_grab((buffer + NUM_PIXS));
   pixel_grab(buffer, NUM_PIXS);
+}
+//-------------------------------------------------------------------------------------------
+void ADNS_reset(void){                              // Сброс сенсора
+  ADNS_write(0x3a,0x5a);
+  delay(1000);
+  ADNS_write(ADNS_MOUSE_CONTROL, 0x01);             // Устанавливаем разрешение в 1000cpi
+  delay(1000);
 }
