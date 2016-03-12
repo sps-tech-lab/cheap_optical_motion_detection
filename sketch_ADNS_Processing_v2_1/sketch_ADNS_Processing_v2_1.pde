@@ -47,17 +47,17 @@ void draw()
 
 void serialEvent(Serial p)
 {
-  rx = p.read();                            // Считываем принятый байт из порта
-  if( rx == 0xFF) recive = true;            // Если это маркер начала, запускаем прием пакета
-  
-  if(recive)                                // Прием пакета
+  rx = p.read();                             // Считываем принятый байт из порта
+  if( rx == 0xFF) recive = true;             // Если это маркер начала, запускаем прием пакета
+    
+  if(recive)                                 // Прием пакета
   {
-    if(framepos < frameX*frameY)            // Складываем принятые байты в буфер
+    if(framepos < frameX*frameY)             // Складываем принятые байты в буфер
     {
       frame[framepos]=rx;
       framepos++;
     }
-    if(framepos == frameX*frameY)           // Закончили, отключили прием, збросили счетчик
+    if(framepos == frameX*frameY)            // Закончили, отключили прием, збросили счетчик
     {
       recive = false;
       framepos=0;
