@@ -63,20 +63,15 @@ void setup() {
 void loop()
 {
   params_grab(param);
-  Serial.write(0xFF);
-  Serial.write(frame, NUM_PIXS);      // Шлем данные "одним пакетом"
-  delay(200);
-/*
-  Serial.write(0xFF);
-  for (int i = 0;i <225; i++)           // Шлем данные "постепенно"
-  {
-      Serial.write(frame[i]);
-      delay(1);
-  }
-*/
-//  Serial.write(frame, NUM_PIXS);      // Шлем данные "одним пакетом"
-//  delay(200);
 
+  int shutter = word(param[5], param[6]);
+
+  Serial.print("###################################/n");
+  Serial.print("ADNS_MOTION = ");
+  Serial.print(param[1]);
+  Serial.print("###################################/n");
+
+  delay(200);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 //-------------------------------------------------------------------------------------------

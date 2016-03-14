@@ -21,7 +21,7 @@ void setup()
 {
   size( 300, 300 );                          // Размер окна Windows для отрисовки
   frame = new int[frameX*frameY];            // Выделяем память 225 байт
-  com = new Serial(this, "COM1", 115200);    // Подключаемся к СОМ-порту
+  com = new Serial(this, "COM3", 9600);    // Подключаемся к СОМ-порту
   noStroke();                                // Не обводить квараты рамкой
   noSmooth();                                // Не сглаживать грани
 }
@@ -48,7 +48,6 @@ void draw()
 void serialEvent(Serial p)
 {
   rx = p.read();                             // Считываем принятый байт из порта
-  if( rx == 0xFF) recive = true;             // Если это маркер начала, запускаем прием пакета
     
   if(recive)                                 // Прием пакета
   {
@@ -63,4 +62,5 @@ void serialEvent(Serial p)
       framepos=0;
     }
   }
+  if( rx == 0xFF) recive = true;             // Если это маркер начала, запускаем прием пакета
 }
