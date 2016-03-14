@@ -64,14 +64,49 @@ void loop()
 {
   params_grab(param);
 
+  Serial.write(0xFF);
+  for (byte i = 1; i<12; i++){ 
+    Serial.write(param[i]);
+    delay(10);
+  }
+  
+/*
   int shutter = word(param[5], param[6]);
 
-  Serial.print("###################################/n");
+  Serial.print("###################################\n");
   Serial.print("ADNS_MOTION = ");
-  Serial.print(param[1]);
-  Serial.print("###################################/n");
+  Serial.print(param[1],BIN);
+  Serial.print("\n");
+  Serial.print("ADNS_DELTA_X = ");
+  Serial.print(param[2]);
+  Serial.print("\n");
+  Serial.print("ADNS_DELTA_Y = ");
+  Serial.print(param[3]);
+  Serial.print("\n");
+  Serial.print("ADNS_SQUAL = ");
+  Serial.print(param[4]);
+  Serial.print("\n");
+  Serial.print("ADNS_SHUTTER = ");
+  Serial.print(shutter);
+  Serial.print("\n");
+  Serial.print("ADNS_MAX_PIX = ");
+  Serial.print(param[7]);
+  Serial.print("\n");
+  Serial.print("ADNS_PIX_SUM = ");
+  Serial.print(param[8]);
+  Serial.print("\n");
+  Serial.print("ADNS_MIN_PIX = ");
+  Serial.print(param[9]);
+  Serial.print("\n");
+  Serial.print("ADNS_MOUSE_CONTROL = ");
+  Serial.print(param[10],BIN);
+  Serial.print("\n");
+  Serial.print("ADNS_REST_MODE = ");
+  Serial.print(param[11],BIN);
+  Serial.print("\n");
+*/  
 
-  delay(200);
+//  delay(500);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 //-------------------------------------------------------------------------------------------
