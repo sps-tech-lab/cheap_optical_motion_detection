@@ -66,16 +66,17 @@ void loop()
   ADNS_write(0x02,0xFF);
   Serial.write(temp);
 */
-/*
+
   Serial.write(255);                     // Отправляем тестовый градиент
   int j;
   for (int i = 0;i <225; i++)
   {
-    ter[i] = i;
+    ter[i] = i+j;
   }
+  j+=10;
   Serial.write(ter, 225);
-*/
 
+/*
   pixel_grab(frame, NUM_PIXS);          // Считываем массив кадра
   
   Serial.write(0xFF);
@@ -85,7 +86,7 @@ void loop()
       Serial.write(frame[i]);
       delay(1);
   }
-
+*/
  
 //  Serial.write(frame, NUM_PIXS);      // Шлем данные "одним пакетом"
 //  delay(200);
