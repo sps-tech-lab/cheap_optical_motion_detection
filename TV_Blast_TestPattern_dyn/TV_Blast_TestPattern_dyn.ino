@@ -29,12 +29,12 @@ void loop()
    //  Serial.write(100);
    //  Serial.write(trio[i]);
    pix=fon;
-   pix = rect(i, 40, 80, 60, 100, 15, pix);
-   pix = rect(i, 120, 80, 140, 100, 15, pix);
+   pix = rect(i, j, 80, j+20, 100, 15, pix);
+   pix = rect(i, j+80, 80, j+80+20, 100, 15, pix);
    pix = rect(i, 50, 20, 130, 40, 180, pix);
    Serial.write(pix);
   }
-//  j+=10;
+  j+=10;
 delay(100);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
