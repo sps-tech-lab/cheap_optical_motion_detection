@@ -18,7 +18,8 @@
 #define camAddr_WR  0x42  // Адрес камеры на запись
 #define camAddr_RD  0x43  // Адрес камеры на чтение
 
-/* Registers */
+// Регистры OV7670 (дефайны адресов регистров)
+
 #define REG_GAIN        0x00  /* Gain lower 8 bits (rest in vref) */
 #define REG_BLUE        0x01  /* blue gain */
 #define REG_RED         0x02  /* red gain */
@@ -45,7 +46,7 @@
 #define REG_CLKRC       0x11  /* Clocl control */
 #define CLK_EXT         0x40  /* Use external clock directly */
 #define CLK_SCALE       0x3f  /* Mask for internal clock scale */
-#define REG_COM7        0x12  /* Control 7 */ //REG mean address.
+#define REG_COM7        0x12  /* Control 7 */ 
 #define COM7_RESET      0x80  /* Register reset */
 #define COM7_FMT_MASK   0x38
 #define COM7_FMT_VGA    0x00
@@ -116,6 +117,7 @@
 #define REG_COM17       0x42  /* Control 17 */
 #define COM17_AECWIN    0xc0  /* AEC window - must match COM4 */
 #define COM17_CBAR      0x08  /* DSP Color bar */
+
 /*
 * This matrix defines how the colors are generated, must be
 * tweaked to adjust hue and saturation.
@@ -124,6 +126,7 @@
 * They are nine-bit signed quantities, with the sign bit
 * stored in0x58.Sign for v-red is bit 0, and up from there.
 */
+
 #define REG_CMATRIX_BASE  0x4f
 #define CMATRIX_LEN       6
 #define REG_CMATRIX_SIGN  0x58
@@ -241,30 +244,12 @@
 #define COM17_AECWIN      0xc0  /* AEC window - must match COM4 */
 #define COM17_CBAR        0x08  /* DSP Color bar */
 
-#define CMATRIX_LEN       6
-#define REG_BRIGHT        0x55  /* Brightness */
-#define REG_REG76         0x76  /* OV's name */
-#define R76_BLKPCOR       0x80  /* Black pixel correction enable */
-#define R76_WHTPCOR       0x40  /* White pixel correction enable */
-#define REG_RGB444        0x8c  /* RGB 444 control */
-#define R444_ENABLE       0x02  /* Turn on RGB444, overrides 5x5 */
-#define R444_RGBX         0x01  /* Empty nibble at end */
-#define REG_HAECC1        0x9f  /* Hist AEC/AGC control 1 */
-#define REG_HAECC2        0xa0  /* Hist AEC/AGC control 2 */
-#define REG_BD50MAX       0xa5  /* 50hz banding step limit */
-#define REG_HAECC3        0xa6  /* Hist AEC/AGC control 3 */
-#define REG_HAECC4        0xa7  /* Hist AEC/AGC control 4 */
-#define REG_HAECC5        0xa8  /* Hist AEC/AGC control 5 */
-#define REG_HAECC6        0xa9  /* Hist AEC/AGC control 6 */
-#define REG_HAECC7        0xaa  /* Hist AEC/AGC control 7 */
-#define REG_BD60MAX       0xab  /* 60hz banding step limit */
 #define MTX1              0x4f  /* Matrix Coefficient 1 */
 #define MTX2              0x50  /* Matrix Coefficient 2 */
 #define MTX3              0x51  /* Matrix Coefficient 3 */
 #define MTX4              0x52  /* Matrix Coefficient 4 */
 #define MTX5              0x53  /* Matrix Coefficient 5 */
 #define MTX6              0x54  /* Matrix Coefficient 6 */
-#define REG_CONTRAS       0x56  /* Contrast control */
 #define MTXS              0x58  /* Matrix Coefficient Sign */
 #define AWBC7             0x59  /* AWB Control 7 */
 #define AWBC8             0x5a  /* AWB Control 8 */
@@ -272,7 +257,6 @@
 #define AWBC10            0x5c  /* AWB Control 10 */
 #define AWBC11            0x5d  /* AWB Control 11 */
 #define AWBC12            0x5e  /* AWB Control 12 */
-#define REG_GFI           0x69  /* Fix gain control */
 #define GGAIN             0x6a  /* G Channel AWB Gain */
 #define DBLV              0x6b  
 #define AWBCTR3           0x6c  /* AWB Control 3 */
@@ -280,13 +264,40 @@
 #define AWBCTR1           0x6e  /* AWB Control 1 */
 #define AWBCTR0           0x6f  /* AWB Control 0 */
 
+#define SCALING_DCWCTR    0x72
+#define SCALING_PCLK_DIV  0x73
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////// СТРУКТУРЫ /////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct regval_list{
+  uint8_t reg_num;
+  uint16_t value;
+};
+
+const struct regval_list qvga_ov7670[] PROGMEM = {
+  { REG_COM14, 0x19 },
+  { SCALING_DCWCTR, 0x11 },
+  { SCALING_PCLK_DIV, 0xf1 },
+  { REG_HSTART, 0x16 },
+  { REG_HSTOP, 0x04 },
+  { REG_HREF, 0xa4 },
+  { REG_VSTART, 0x02 },
+  { REG_VSTOP, 0x7a },
+  { REG_VREF, 0x0a },
+  { 0xFF, 0xff },         // END MARKER
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////// ИНИЦИАЛИЗАЦИЯ /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void setup() {
   Serial.begin(56000);    // Настраиваем последовательный порт
   HrdwareInit();          // Настраиваем периферию
-  camInit();
-                                                                
+  camInit();                   
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////// ОСНОВНЫЙ ЦИКЛ /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void loop() {
   Serial.write(255);
@@ -294,9 +305,11 @@ void loop() {
   Serial.write(ASSR);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////// ФУНКЦИИ ///////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void HrdwareInit(void) {
   
-    // Настраиваем генератор тактового сигнала на 8МГц
+  // Настраиваем генератор тактового сигнала на 8МГц
   DDRB = 0x00;                                                                 // Чистим порт от предустановок. Актуально для Arduino Nano v3
   DDRB |= _BV(PB3);                                                            // Для генерации сигнала XCLK используем пин PB3 (#11 Arduino Nano v3)
   ASSR &= ~(1 << EXCLK | 1 << AS2);                                            // Частота с внешнего кварца / асинхронный таймер
@@ -313,10 +326,10 @@ void HrdwareInit(void) {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void camInit(void){
-  wrReg(0x12, 0x80);
+  wrReg(REG_COM7, 0x80);                                // Сброс регистров SCCB
   _delay_ms(100);
 //  wrSensorRegs8_8(ov7670_default_regs);
-//  wrReg(REG_COM10, 32);//PCLK does not toggle on HBLANK.
+  wrReg(REG_COM10, 32);                                 // PCLK не переключается во время HBLANK
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
