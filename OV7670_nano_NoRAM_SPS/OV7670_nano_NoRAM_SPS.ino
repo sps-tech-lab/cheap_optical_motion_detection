@@ -9,17 +9,18 @@
 
 // Дефайны портов
 
-#define XCLK  11
-#define D0    A0
-#define D1    A1
-#define D2    A2
-#define D3    A3
-#define D4    4
-#define D5    5
-#define D6    6
-#define D7    7
-#define VSYNC 3
-#define PCLK  2
+#define XCLK  11  // PB3
+#define VSYNC 3   // PD3
+#define PCLK  2   // PD2
+
+#define D0    A0  // PC0
+#define D1    A1  // PC1
+#define D2    A2  // PC2
+#define D3    A3  // PC3
+#define D4    4   // PD4
+#define D5    5   // PD5
+#define D6    6   // PD6
+#define D7    7   // PD7
 
 // Дефайны OV7670
 
@@ -351,6 +352,7 @@ void loop() {
 ///////////////////////////////////////////////////////////////////////// ФУНКЦИИ ///////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void HrdwareInit(void) {
+  cli();  // Отключаем все прерывания перед началом инициализации
   
   // Настраиваем генератор тактового сигнала на 8МГц
   DDRB = 0x00;                                                                 // Чистим порт от предустановок. Актуально для Arduino Nano v3
@@ -370,7 +372,7 @@ void HrdwareInit(void) {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void camInit(void){
   wrReg(REG_COM7, 0x80);                                // Сброс регистров SCCB
-  _delay_ms(100);
+  _delay_ms(100);                                       // Задержка в 100 мс.
   wrSensorRegs(OV7670_default_regs);
   wrReg(REG_COM10, 32);                                 // PCLK не переключается во время HBLANK
 }
@@ -397,28 +399,36 @@ void wrSensorRegs(const struct RegVal reglist[]){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 static void captureImg(uint16_t wg, uint16_t hg){
   uint16_t y, x;
+  byte data;
 
-  Serial.print(0x255);        // Инициируем начало кадра
+  Serial.print(0x255);        // Инициируем начало кадра (Шлем "маркер")
 
-  while (!(PIND & 8));        //  wait for high PD3
-  while ((PIND & 8));         //  wait for low
-  //digitalRead();
+  // while (!(PIND & 8));        //  wait for high PD3
+  // while ((PIND & 8));         //  wait for low
+  while (!(digitalRead(VSYNC)));  // Ждем установки [1] на VSYNC
+  while ((digitalRead(VSYNC)));   // Ждем установки [0] на VSYNC
 
   y = hg;
   while (y--){
         x = wg;
-      //while (!(PIND & 256));//wait for high
+      //while (!(PIND & 256)); //wait for high
     while (x--){
-      while ((PIND & 4)); //wait for low
-//-----------------------------------------------------------( ?? ) 
-      UDR0 = (PINC & 15) | (PIND & 240);
-      while (!(UCSR0A & (1 << UDRE0))); //wait for byte to transmit
-//-----------------------------------------------------------( ?? )     
-      while (!(PIND & 4));  //wait for high
-      while ((PIND & 4));   //wait for low
-      while (!(PIND & 4));  //wait for high
+      //while ((PIND & 4)); //wait for low
+      while ((digitalRead(PCLK)));   // Ждем установки [0] на PCLK
+//-----------------------------------------------------------[Обрабатываем и отсылаем полученный пиксель] 
+      data = (PINC & 15) | (PIND & 240); // Получаем данные с виртуального порта (D0-D7) через физ.пины [!]
+      if(data==255)data=254;             // Подгоняем данные под формат пересылки
+      Serial.write(data);                // Шлем байт
+//-----------------------------------------------------------     
+      //while (!(PIND & 4));  //wait for high
+      //while ((PIND & 4));   //wait for low
+      //while (!(PIND & 4));  //wait for high
+      while (!(digitalRead(PCLK)));  // Ждем установки [1] на PCLK
+      while ((digitalRead(PCLK)));   // Ждем установки [0] на PCLK
+      while (!(digitalRead(PCLK)));  // Ждем установки [1] на PCLK
+      
     }
-    //  while ((PIND & 256));//wait for low
+    //  while ((PIND & 256)); //wait for low
   }
     _delay_ms(100);
 }
