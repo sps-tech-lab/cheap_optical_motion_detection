@@ -335,7 +335,7 @@ const struct RegVal OV7670_default_regs[] PROGMEM = {
 ///////////////////////////////////////////////////////////////////// ИНИЦИАЛИЗАЦИЯ /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void setup() {
-  Serial.begin(56000);    // Настраиваем последовательный порт
+  Serial.begin(9600);     // Настраиваем последовательный порт
   HrdwareInit();          // Настраиваем периферию
   camInit();              // Стартовая инициализация камеры
   setResolution();        // Выставляем разрешение
@@ -401,10 +401,10 @@ static void captureImg(uint16_t wg, uint16_t hg){
   uint16_t y, x;
   byte data;
 
-  Serial.print(0x255);        // Инициируем начало кадра (Шлем "маркер")
+  Serial.write(255);              // Инициируем начало кадра (Шлем "маркер")
 
-  // while (!(PIND & 8));        //  wait for high PD3
-  // while ((PIND & 8));         //  wait for low
+  // while (!(PIND & 8));         //  wait for high PD3
+  // while ((PIND & 8));          //  wait for low
   while (!(digitalRead(VSYNC)));  // Ждем установки [1] на VSYNC
   while ((digitalRead(VSYNC)));   // Ждем установки [0] на VSYNC
 
@@ -419,6 +419,7 @@ static void captureImg(uint16_t wg, uint16_t hg){
       data = (PINC & 15) | (PIND & 240); // Получаем данные с виртуального порта (D0-D7) через физ.пины [!]
       if(data==255)data=254;             // Подгоняем данные под формат пересылки
       Serial.write(data);                // Шлем байт
+     // Serial.write(random(250));
 //-----------------------------------------------------------     
       //while (!(PIND & 4));  //wait for high
       //while ((PIND & 4));   //wait for low
