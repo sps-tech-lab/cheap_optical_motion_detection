@@ -8,7 +8,7 @@ Serial com;
  
 final int frameX = 15;
 final int frameY = 15;
-final int frameSZ = 20;
+final int frameSZ = 40;
 
 boolean   recive = false;    // Статус приема
 int       rx;                // Буфер принятого байта
@@ -19,7 +19,7 @@ int       framepos=0;        // Позиция в массиве кадра
 
 void setup()
 {
-  size( 300, 300 );                          // Размер окна Windows для отрисовки
+  size( 600, 600 );                          // Размер окна Windows для отрисовки
   frame = new int[frameX*frameY];            // Выделяем память 225 байт
   com = new Serial(this, "COM3", 9600);    // Подключаемся к СОМ-порту
   noStroke();                                // Не обводить квараты рамкой
