@@ -4,9 +4,9 @@
 import processing.serial.*;
 Serial port;
 
-final int frameX = 94;    // Разрешение по горизонтали 94
+final int frameX = 320;    // Разрешение по горизонтали 94
 final int frameY = 240;      // Разрешение по вертикали
-final int frameSZ = 4;       // Масштаб пикселя
+final int frameSZ = 2;       // Масштаб пикселя
 
 final int bufsize = frameX*frameY+11;
 
@@ -26,11 +26,11 @@ int       grafbuf;
 //////////////////////////////////////  ИНИЦИАЛИЗАЦИЯ  ///////////////////////////////////////
 void setup()
 {
-  size( 378, 502 );                          // Размер окна Windows для отрисовки
+  size( 640, 502 );                          // Размер окна Windows для отрисовки
   frame = new int[bufsize];                  // Выделяем память
   postframe = new int[bufsize];              // Выделяем память
   
-  port = new Serial(this, "COM3", 234000);   // Подключаемся к СОМ-порту
+  port = new Serial(this, "COM3", 345600);   // Подключаемся к СОМ-порту
 
   font = loadFont("Vrinda-Bold-16.vlw");
   textFont(font,16);
@@ -51,7 +51,7 @@ void draw()
     {
        fill(postframe[readpos]);                               // Преобразуем диапазон входных чисел
     //   fill(map(frame[readpos], 0, 15, 0, 250));             // Преобразуем диапазон входных чисел
-       rect(i * frameSZ, j * frameSZ/2, frameSZ, frameSZ/2);   // Рисуем квадраты
+       rect(i * frameSZ, j * frameSZ, frameSZ, frameSZ);   // Рисуем квадраты
        readpos++;                                              // Переходим к следующей ячейке
     }
   }
