@@ -182,6 +182,11 @@
 #define AWBCTR1           0x6e  /* AWB Control 1 */
 #define AWBCTR0           0x6f  /* AWB Control 0 */
 
+#define SCAXLSIC_XSC      0x70  //
+#define SCAXLSIC_YSC      0x71  //
+#define DNSTH             0x4c  // De-noise Strength
+#define REG77             0x77  // De-noise Offset
+
 #define SCALING_DCWCTR    0x72
 #define SCALING_PCLK_DIV  0x73
 
@@ -235,7 +240,8 @@ const struct RegVal OV7670_default_regs[] PROGMEM = {
   { REG_COM3, 0 }, { REG_COM14, 0 },
   
   /* Mystery scaling numbers */
-  { 0x70, 0x3a }, { 0x71,       0x35 },
+  { SCAXLSIC_XSC, 0x3a }, { SCAXLSIC_YSC, 0x35 },
+  //{ SCAXLSIC_XSC, 0xBA }, { SCAXLSIC_YSC, 0xB5 }, //sps: Включение настроечной таблицы
   { 0x72, 0x11 }, { 0x73,       0xf0 },
   { 0xa2, 0x01 }, { REG_COM10,  0x0 },
   
@@ -291,7 +297,7 @@ const struct RegVal OV7670_default_regs[] PROGMEM = {
   { 0x5d, 0x49 }, { 0x5e, 0x0e },
   { 0x6c, 0x0a }, { 0x6d, 0x55 },
   { 0x6e, 0x11 }, { 0x6f, 0x9e }, /* it was 0x9F "9e for advance AWB" */
-  { 0x6a, 0x40 }, { REG_BLUE, 0x40 },
+  { GGAIN, 0x40 }, { REG_BLUE, 0x40 },
   { REG_RED, 0x60 },
   { REG_COM8, COM8_FASTAEC | COM8_AECSTEP | COM8_AGC | COM8_AEC | COM8_AWB },
 
@@ -301,9 +307,10 @@ const struct RegVal OV7670_default_regs[] PROGMEM = {
   { 0x53, 0x5e }, { 0x54, 0x80 },
   { 0x58, 0x9e },
 
-  { REG_COM16, COM16_AWBGAIN }, { REG_EDGE, 0 },
+  { REG_COM16, COM16_AWBGAIN }, { REG_EDGE, 0xF }, //sps установил EDGE-> 0xF
   { 0x75, 0x05 }, { REG_REG76, 0xe1 },
-  { 0x4c, 0 },    { 0x77, 0x01 },
+  { DNSTH, 0 },{ REG77, 0x01 },
+ // { DNSTH, 0x5 },    { REG77, 0x10 },  // sps exp's     
   { REG_COM13, /*0xc3*/0x48 }, { 0x4b, 0x09 },
   { 0xc9, 0x60 },   /*{REG_COM16, 0x38},*/
   { 0x56, 0x40 },
@@ -335,7 +342,7 @@ const struct RegVal OV7670_default_regs[] PROGMEM = {
 ///////////////////////////////////////////////////////////////////// ИНИЦИАЛИЗАЦИЯ /////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void setup() {
-  Serial.begin(460800);   // Настраиваем последовательный порт
+  Serial.begin(346000);   // Настраиваем последовательный порт
   HrdwareInit();          // Настраиваем периферию
   camInit();              // Стартовая инициализация камеры
   setResolution();        // Выставляем разрешение
