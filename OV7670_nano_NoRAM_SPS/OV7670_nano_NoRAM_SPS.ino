@@ -400,6 +400,7 @@ void wrSensorRegs(const struct RegVal reglist[]){
 static void captureImg(uint16_t wg, uint16_t hg){
   uint16_t y, x;
   byte data;
+ 
 
   Serial.write(255);              // Инициируем начало кадра (Шлем "маркер")
 
