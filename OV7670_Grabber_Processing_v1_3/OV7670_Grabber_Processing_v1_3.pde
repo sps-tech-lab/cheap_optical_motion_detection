@@ -30,7 +30,11 @@ void setup()
   frame = new int[bufsize];                  // Выделяем память
   postframe = new int[bufsize];              // Выделяем память
   
+<<<<<<< HEAD
   port = new Serial(this, "COM3", 346000);   // Подключаемся к СОМ-порту
+=======
+  port = new Serial(this, "COM3", 345600);   // Подключаемся к СОМ-порту
+>>>>>>> origin/master
 
   font = loadFont("Vrinda-Bold-16.vlw");
   textFont(font,16);
