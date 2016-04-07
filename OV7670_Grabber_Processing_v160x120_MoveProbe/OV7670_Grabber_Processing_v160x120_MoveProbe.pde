@@ -15,6 +15,8 @@ int       rx;                // Буфер принятого байта
 int[]     frame;             // Массив кадра
 int[]     postframe;         // Массив кадра на вывод
 int[]     cpiframe;          // Массив кадра для обработки движений
+int[]     probeframe;        // Массив результатов сравнения
+int       probe;             // Степень "Движения"
 int       framepos=0;        // Позиция в массиве кадра
 
 PFont     font;              // Шрифт
@@ -33,6 +35,8 @@ void setup()
   size( 320, 262 );                          // Размер окна Windows для отрисовки
   frame = new int[bufsize];                  // Выделяем память
   postframe = new int[bufsize];              // Выделяем память
+  cpiframe = new int[bufsize];               // Выделяем память
+  probeframe = new int[bufsize];             // Выделяем память
   
   port = new Serial(this, "COM3", 346000);   // Подключаемся к СОМ-порту
 
@@ -49,13 +53,13 @@ void draw()
   background(0);
   
   int readpos=0;                                               // Начинаем сначала
-    for(int j=0;j<frameY;j++)                               // Координаты по Y
+    for(int j=0;j<frameY;j++)                                  // Координаты по Y
   {
-    for(int i=0;i<frameX;i++)                                    // Координаты по Х
+    for(int i=0;i<frameX;i++)                                  // Координаты по Х
     {
        fill(postframe[readpos]);                               // Преобразуем диапазон входных чисел
     //   fill(map(frame[readpos], 0, 15, 0, 250));             // Преобразуем диапазон входных чисел
-       rect(i * frameSZ, j * frameSZ, frameSZ, frameSZ);   // Рисуем квадраты
+       rect(i * frameSZ, j * frameSZ, frameSZ, frameSZ);       // Рисуем квадраты
        readpos++;                                              // Переходим к следующей ячейке
     }
   }
@@ -82,16 +86,19 @@ void draw()
   text("FPS",60,height-4);                            
   rect(85,height-8,timer*6,4);                                  // График таймера FPS
   //-------------------------------------------------------------------------------------------------------------------- 
-  stroke(255,0,0);     // Отрисовываем горизонтальную линию разделения
-  fill(255,0,0,20);
-  int hu=(height-22)/2;
-  quad(width/2-ww, hu-hw,width/2+ww, hu-hw,width/2+ww, hu+hw,width/2-ww, hu+hw);                                       
+ 
+  if(probe>15){stroke(0,255,0);}else{stroke(255,0,0);};         // Отрисовываем горизонтальную линию разделения
+  if(probe>15){fill(0,255,0,20);}else{fill(255,0,0,20);};
+  
+  int hu=(height-22)/2;                                         // Рисуем квадрат в центире 
+  quad(width/2-ww, hu-hw,width/2+ww, hu-hw,width/2+ww, hu+hw,width/2-ww, hu+hw);                                      
   noStroke();
   
-  fill(255,0,0);             
-  textFont(font,20);                                            // Отрисовываем логотип
+  if(probe>15){fill(0,255,0);}else{fill(255,0,0);};           
+  
+  textFont(font,20);                                            // Выводим текст
   textAlign(CENTER); //<>// //<>//
-  text("NO MOVE",width/2,height/2+hw/2+40);    
+  text("MOVE = "+probe,width/2,height/2+hw/2+40);    
   //--------------------------------------------------------------------------------------------------------------------  
 }
 //////////////////////////////////////// ПРИЕМ ДАННЫХ ///////////////////////////////////////
@@ -108,7 +115,7 @@ void serialEvent(Serial p)
     }
     if(framepos == bufsize)                  // Закончили, отключили прием, збросили счетчик
     {
-      recive = false;
+      recive = false; //<>//
     }
   }
   if( rx == 0xFF){
@@ -117,9 +124,28 @@ void serialEvent(Serial p)
     arrayCopy(postframe,cpiframe);
     arrayCopy(frame, postframe);
     fps++;
+    MoveProbe();
   }
 }
-
+//////////////////////////////////////// ИССЛЕДУЕМ "ДВИЖЕНЕ" //////////////////////////////////////
+void MoveProbe()
+{
+  for(int i=0; i<bufsize; i++)                 // Проверяем степень "отличия" пикселей
+  {
+    if(postframe[i]>cpiframe[i])               // Исключаем отрицательные значения
+    {
+      probeframe[i]=postframe[i]-cpiframe[i];  
+    }else{
+      probeframe[i]=cpiframe[i]-postframe[i];
+    }
+  }
+  for(int i=0; i<bufsize;i++)                  // Суммируем все элементы массива
+  {
+    probe+=probeframe[i];
+  }
+  probe=probe/bufsize;                         // Получаем среднее арифметическое
+}
+/////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////// ВЫЧЕСЛЯЕМ FPS //////////////////////////////////////
 void TimerUpdate()
 {

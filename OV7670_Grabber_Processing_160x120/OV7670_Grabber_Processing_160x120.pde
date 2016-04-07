@@ -8,24 +8,20 @@ final int frameX = 160;    // Разрешение по горизонтали 9
 final int frameY = 120;      // Разрешение по вертикали
 final int frameSZ = 2;       // Масштаб пикселя
 
-final int bufsize = frameX*frameY;
+final int bufsize = frameX*frameY+11;
 
 boolean   recive = false;    // Статус приема
 int       rx;                // Буфер принятого байта
 int[]     frame;             // Массив кадра
 int[]     postframe;         // Массив кадра на вывод
-int[]     cpiframe;          // Массив кадра для обработки движений
 int       framepos=0;        // Позиция в массиве кадра
 
 PFont     font;              // Шрифт
 
 int       secstore;          // Временная переменная для отлова смены секунд
 int       timer;
-float     fps,postfps;       // Подсчет FPS
+float     fps,postfps;
 int       grafbuf;
-
-int       ww=150/2;          // Центр квадрата
-int       hw=100/2;          // Центр квадрата
 
 //////////////////////////////////////  ИНИЦИАЛИЗАЦИЯ  ///////////////////////////////////////
 void setup()
@@ -66,7 +62,7 @@ void draw()
 //--------------------------------------------------------------------------------------------------------------------  
   fill(255);             
   textFont(font,16);                                            // Отрисовываем логотип
-  textAlign(RIGHT); //<>// //<>// //<>//
+  textAlign(RIGHT); //<>// //<>// //<>// //<>//
   text(":: SPS TECH :: 2016 ::",width-5,height-6);             
 //-------------------------------------------------------------------------------------------------------------------- 
   textAlign(LEFT);                                              // Отображаем FPS   
@@ -82,17 +78,6 @@ void draw()
   text("FPS",60,height-4);                            
   rect(85,height-8,timer*6,4);                                  // График таймера FPS
   //-------------------------------------------------------------------------------------------------------------------- 
-  stroke(255,0,0);     // Отрисовываем горизонтальную линию разделения
-  fill(255,0,0,20);
-  int hu=(height-22)/2;
-  quad(width/2-ww, hu-hw,width/2+ww, hu-hw,width/2+ww, hu+hw,width/2-ww, hu+hw);                                       
-  noStroke();
-  
-  fill(255,0,0);             
-  textFont(font,20);                                            // Отрисовываем логотип
-  textAlign(CENTER); //<>// //<>//
-  text("NO MOVE",width/2,height/2+hw/2+40);    
-  //--------------------------------------------------------------------------------------------------------------------  
 }
 //////////////////////////////////////// ПРИЕМ ДАННЫХ ///////////////////////////////////////
 void serialEvent(Serial p)
@@ -114,7 +99,6 @@ void serialEvent(Serial p)
   if( rx == 0xFF){
     recive = true;                           // Если это маркер начала, запускаем прием пакета
     framepos=0;
-    arrayCopy(postframe,cpiframe);
     arrayCopy(frame, postframe);
     fps++;
   }
