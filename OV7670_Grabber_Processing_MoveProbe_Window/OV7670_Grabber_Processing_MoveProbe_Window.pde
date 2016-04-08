@@ -16,7 +16,6 @@ int[]     frame;             // Массив кадра
 int[]     postframe;         // Массив кадра на вывод
 int[]     cpiframe;          // Массив кадра для обработки движений
 int[]     probeframe;        // Массив результатов сравнения
-int[]     probebloks;        // Массив результатов сравнения по блокам
 int       probe;             // Степень "Движения"
 int       framepos=0;        // Позиция в массиве кадра
 
@@ -29,6 +28,7 @@ int       grafbuf;
 
 int       ww=150/2;          // Центр квадрата
 int       hw=100/2;          // Центр квадрата
+int       gist=5;            // Порог срабатывания
 
 //////////////////////////////////////  ИНИЦИАЛИЗАЦИЯ  ///////////////////////////////////////
 void setup()
@@ -38,7 +38,6 @@ void setup()
   postframe = new int[bufsize];              // Выделяем память
   cpiframe = new int[bufsize];               // Выделяем память
   probeframe = new int[bufsize];             // Выделяем память
-  probebloks = new int[100];                 // Выделяем память
   
   port = new Serial(this, "COM3", 346000);   // Подключаемся к СОМ-порту
 
@@ -60,7 +59,6 @@ void draw()
     for(int i=0;i<frameX;i++)                                  // Координаты по Х
     {
        fill(postframe[readpos]);                               // Преобразуем диапазон входных чисел
-    //   fill(map(frame[readpos], 0, 15, 0, 250));             // Преобразуем диапазон входных чисел
        rect(i * frameSZ, j * frameSZ, frameSZ, frameSZ);       // Рисуем квадраты
        readpos++;                                              // Переходим к следующей ячейке
     }
@@ -87,28 +85,22 @@ void draw()
   fill(100); 
   text("FPS",60,height-4);                            
   rect(85,height-8,timer*6,4);                                  // График таймера FPS
-  //--------------------------------------------------------------------------------------------------------------------  //<>//
-    
-    for(int j=0;j<10;j++)                                  // Координаты по Y
-    {
-      for(int i=0;i<10;i++)                                // Координаты по Х
-      {
-       if(probebloks[j*10+i]>15)
-       {
-        fill(0,255,0,50);
-        stroke(0,255,0,80);
-       }else{
-         fill(0,0,0,0);
-         noStroke();
-       }
-      // fill(0,255,0,probebloks[j*10+i]);
-      // stroke(0,255,0,probebloks[j*10+i]);
-       rect(i * 16*frameSZ, j * 12*frameSZ, 16*frameSZ, 12*frameSZ);
-       noStroke();
-      }
-    }
-    noStroke();
-  //--------------------------------------------------------------------------------------------------------------------
+  //-------------------------------------------------------------------------------------------------------------------- 
+ 
+  if(probe>gist){stroke(0,255,0);}else{stroke(255,0,0);};       // Отрисовываем горизонтальную линию разделения
+  if(probe>gist){fill(0,255,0,20);}else{fill(255,0,0,20);};
+  
+  int hu=(height-22)/2;                                         // Рисуем квадрат в центире 
+  quad(width/2-ww, hu-hw,width/2+ww, hu-hw,width/2+ww, hu+hw,width/2-ww, hu+hw);                                      
+  noStroke();
+  
+  if(probe>gist){fill(0,255,0);}else{fill(255,0,0);};           
+  
+  textFont(font,20);                                            // Выводим текст
+  textAlign(CENTER); //<>// //<>//
+  text("MOVE = "+probe,width/2,height/2+hw/2+40);    
+
+  //--------------------------------------------------------------------------------------------------------------------  
 }
 //////////////////////////////////////// ПРИЕМ ДАННЫХ ///////////////////////////////////////
 void serialEvent(Serial p)
@@ -149,25 +141,14 @@ void MoveProbe()
     }
   }
   
-  int bw=16;
-  int bh=12;
-  
-  for(int by=0; by<10; by++)              
+  for(int by=0; by<frameY; by++)              
   {
-    for(int bx=0; bx<10; bx++)                  
+    for(int bx=0; bx<frameX; bx++)                  
     {
-      for(int biy=0; biy<bh; biy++)
-      {
-        for(int bix=0; bix<bw; bix++)                
-        {
-          probebloks[by*10+bx]+=probeframe[bx*bw+by*frameX*bh+biy*frameX+bix];
-        }
-      }
-      //probebloks[by*10+bx]=(by*10+bx)*2;                 // Получаем среднее арифметическое
-      probebloks[by*10+bx]=(probebloks[by*10+bx]/192);
+      if(bx>(frameX-ww)/2 && bx<(frameX-ww)/2+ww && by>(frameY-hw)/2 && by<(frameY-hw)/2+hw) probe+=probeframe[by*frameX+bx];
     }
   }
-  
+  probe=probe/bufsize;                         // Получаем среднее арифметическое
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////// ВЫЧЕСЛЯЕМ FPS //////////////////////////////////////
