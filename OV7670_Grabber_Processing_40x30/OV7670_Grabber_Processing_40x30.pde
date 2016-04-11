@@ -23,7 +23,9 @@ int       timer;
 float     fps,postfps;
 int       grafbuf;
 
-int  ds=0;
+int       dhs=0;
+int       dvs=0;
+boolean   dshift=true;
 
 //////////////////////////////////////  ИНИЦИАЛИЗАЦИЯ  ///////////////////////////////////////
 void setup()
@@ -32,7 +34,7 @@ void setup()
   frame = new int[bufsize];                  // Выделяем память
   postframe = new int[bufsize];              // Выделяем память
   
-  port = new Serial(this, "COM3", 346000);   // Подключаемся к СОМ-порту
+  // port = new Serial(this, "COM3", 346000);   // Подключаемся к СОМ-порту
 
   font = loadFont("Vrinda-Bold-16.vlw");
   textFont(font,16);
@@ -80,6 +82,8 @@ void draw()
   text("FPS",60,height-4);                            
   rect(85,height-8,timer*6,4);                                  // График таймера FPS
   //-------------------------------------------------------------------------------------------------------------------- 
+
+  PsevdoRecive();
 }
 //////////////////////////////////////// ПРИЕМ ДАННЫХ ///////////////////////////////////////
 void serialEvent(Serial p)
@@ -90,10 +94,10 @@ void serialEvent(Serial p)
   {
     if(framepos < bufsize)           // Складываем принятые байты в буфер
     {
-      if (ds==0)frame[framepos]=rx;
+      if (dhs==0)frame[framepos]=rx;
       framepos++;
-      ds++;
-      if(ds==4)ds=0;
+      dhs++;
+      if(dhs==4)dhs=0;
     }
     if(framepos == bufsize)                  // Закончили, отключили прием, збросили счетчик
     {
@@ -105,7 +109,8 @@ void serialEvent(Serial p)
     framepos=0;
     arrayCopy(frame, postframe);
     fps++;
-    ds=0;
+    dhs=0;
+    dvs=0;
   }
 }
 
@@ -118,5 +123,27 @@ void TimerUpdate()
      timer=0;
      fps=0;
   }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////
+void PsevdoRecive()
+{
+    for(framepos=0;framepos < bufsize;framepos++)           // Складываем принятые байты в буфер
+    {
+      if (dhs==0 && dshift)frame[framepos]=int(random(250));
+      dhs++;
+      dvs++;
+      if(dhs==4)dhs=0;
+      if(dvs>=640)
+      {
+        dvs=0;
+        dshift=true;
+      }
+      if(dvs>160)dshift=false;
+    }
+      framepos=0;
+      arrayCopy(frame, postframe);
+      fps++;
+    dhs=0;
+    dvs=0;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
